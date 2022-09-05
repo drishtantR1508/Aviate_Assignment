@@ -10,10 +10,12 @@ import Home from "./components/Home";
 import Applications from "./components/Applications";
 import ApplyForJob from "./components/AppyForJob";
 import ApplicantDetail from "./components/ApplicantDetail";
-const API_URL = "http://127.0.0.1:8000/api/applications/";
+import "./components/globalVariables";
+// const API_URL = "http://127.0.0.1:8000/api/applications/";
 
 const App = () => {
-  const API_URL = "http://127.0.0.1:8000/api/applications/";
+  // const API_URL = "http://127.0.0.1:8000/api/applications/";
+  const API_URL = global.API_URI + "/api/applications/";
   // const BASE_URI = "http://localhost:3000";
 
   const [applicants, setApplicants] = useState([]);

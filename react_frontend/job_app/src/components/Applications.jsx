@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ApplicantCard from "./ApplicantCard";
-
-const API_URL = "http://127.0.0.1:8000/api/applications/";
+import "./globalVariables";
+const API_URL = global.API_URI + "/api/applications/";
 
 const Applications = () => {
   const [applicants, setApplicants] = useState([]);
