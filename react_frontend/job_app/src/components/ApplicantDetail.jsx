@@ -13,6 +13,11 @@ const ApplicantDetail = () => {
     });
   }, [global.API_URI + "/api/applications/" + id]);
 
+  const [status, setStatus] = useState(applicants.status);
+  useEffect(() => {
+    setStatus(applicants.status);
+  }, [applicants.status]);
+
   const [data, setData] = useState({
     candidate: applicants.candidate,
     job_type: applicants.job_type,
@@ -32,7 +37,11 @@ const ApplicantDetail = () => {
       .then((response) => {
         console.log(response.data);
       });
+
+    setStatus(data.status);
   };
+
+  const notify = () => alert("Changed Status Sucessfully");
   const handle = (e) => {
     const newdata = { ...data };
     newdata[e.target.id] = e.target.value;
@@ -74,17 +83,17 @@ const ApplicantDetail = () => {
         <hr />
         <i className="fa fa-home">{" " + applicants.address}</i>
         <div className="d-inline-block float-right pr-2 pb-2">
-          {applicants.status == "Applied" ? (
+          {status == "Applied" ? (
             <a href="#" className="btn btn-light btn-sm text-warning">
-              {applicants.status}
+              {status}
             </a>
-          ) : applicants.status == "Accepted" ? (
+          ) : status == "Accepted" ? (
             <a href="#" className="btn btn-light btn-sm text-success">
-              {applicants.status}
+              {status}
             </a>
           ) : (
             <a href="#" className="btn btn-light btn-sm text-danger">
-              {applicants.status}
+              {status}
             </a>
           )}
         </div>
@@ -109,7 +118,11 @@ const ApplicantDetail = () => {
             </div>
             <div className="col-auto my-1"></div>
             <div className="col-auto my-1">
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                // onClick={notify}
+                className="btn btn-primary"
+              >
                 Submit
               </button>
             </div>
