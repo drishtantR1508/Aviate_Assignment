@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./globalVariables";
+
 const ApplyForJob = () => {
   const url = global.API_URI + "/api/applications/";
   const [data, setData] = useState({
@@ -12,6 +14,7 @@ const ApplyForJob = () => {
     skills: "",
     address: "",
   });
+  const navigate = useNavigate();
   const submit = (e) => {
     e.preventDefault();
     axios
@@ -27,7 +30,11 @@ const ApplyForJob = () => {
       .then((response) => {
         console.log(response.data);
       });
+
+    alert("Applied Sucessfully");
+    navigate(`/applications/`);
   };
+
   const handle = (e) => {
     const newdata = { ...data };
     newdata[e.target.id] = e.target.value;

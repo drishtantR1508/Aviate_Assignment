@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./globalVariables";
-
+var fileDownload = require("js-file-download");
 const ApplicantDetail = () => {
   const { id } = useParams();
+  // console.log("ID : ", id);
   const [applicants, setApplicants] = useState([]);
   const url = global.API_URI + "/api/applications/" + id + "/";
   useEffect(() => {
@@ -12,6 +13,11 @@ const ApplicantDetail = () => {
       setApplicants(response.data);
     });
   }, [global.API_URI + "/api/applications/" + id]);
+
+  const [status, setStatus] = useState(applicants.status);
+  useEffect(() => {
+    setStatus(applicants.status);
+  }, [applicants.status]);
 
   const [data, setData] = useState({
     candidate: applicants.candidate,
@@ -32,12 +38,30 @@ const ApplicantDetail = () => {
       .then((response) => {
         console.log(response.data);
       });
+
+    setStatus(data.status);
   };
+
+  const notify = () => alert("Changed Status Sucessfully");
   const handle = (e) => {
     const newdata = { ...data };
     newdata[e.target.id] = e.target.value;
     setData(newdata);
     // console.log(newdata);
+  };
+
+  const handlePDFDownload = () => {
+    axios
+      .get(global.API_URI + "/application/resume_download/" + id, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, "filename.pdf");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -74,17 +98,17 @@ const ApplicantDetail = () => {
         <hr />
         <i className="fa fa-home">{" " + applicants.address}</i>
         <div className="d-inline-block float-right pr-2 pb-2">
-          {applicants.status == "Applied" ? (
+          {status == "Applied" ? (
             <a href="#" className="btn btn-light btn-sm text-warning">
-              {applicants.status}
+              {status}
             </a>
-          ) : applicants.status == "Accepted" ? (
+          ) : status == "Accepted" ? (
             <a href="#" className="btn btn-light btn-sm text-success">
-              {applicants.status}
+              {status}
             </a>
           ) : (
             <a href="#" className="btn btn-light btn-sm text-danger">
-              {applicants.status}
+              {status}
             </a>
           )}
         </div>
@@ -109,8 +133,19 @@ const ApplicantDetail = () => {
             </div>
             <div className="col-auto my-1"></div>
             <div className="col-auto my-1">
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                // onClick={notify}
+                className="btn btn-primary float-left"
+              >
                 Submit
+              </button>
+
+              <button
+                className="btn btn-info ml-4"
+                onClick={() => handlePDFDownload()}
+              >
+                Download Resume <span className="fa fa-download"></span>
               </button>
             </div>
           </div>
