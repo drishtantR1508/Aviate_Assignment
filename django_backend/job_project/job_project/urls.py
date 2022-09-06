@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from job_app.api import DownloadPDF
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('',include('job_app.urls')),
+    path('application/resume_download/<int:id>', DownloadPDF, name='download_pdf'),
 ]

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./globalVariables";
-
+var fileDownload = require("js-file-download");
 const ApplicantDetail = () => {
   const { id } = useParams();
+  // console.log("ID : ", id);
   const [applicants, setApplicants] = useState([]);
   const url = global.API_URI + "/api/applications/" + id + "/";
   useEffect(() => {
@@ -47,6 +48,20 @@ const ApplicantDetail = () => {
     newdata[e.target.id] = e.target.value;
     setData(newdata);
     // console.log(newdata);
+  };
+
+  const handlePDFDownload = () => {
+    axios
+      .get(global.API_URI + "/application/resume_download/" + id, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, "filename.pdf");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -121,9 +136,16 @@ const ApplicantDetail = () => {
               <button
                 type="submit"
                 // onClick={notify}
-                className="btn btn-primary"
+                className="btn btn-primary float-left"
               >
                 Submit
+              </button>
+
+              <button
+                className="btn btn-info ml-4"
+                onClick={() => handlePDFDownload()}
+              >
+                Download Resume <span className="fa fa-download"></span>
               </button>
             </div>
           </div>
